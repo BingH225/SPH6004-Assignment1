@@ -13,9 +13,9 @@ I use 3 models:
 - `outputs/figures/`: plots (ROC curve and feature importance)
 
 ## How to run
-Run full pipeline:
+Run "preprocess.py","feature_selection.py","train_evaluate.py":
 ```powershell
-$env:PYTHONNOUSERSITE='1'; python scripts/run_pipeline.py
+$env:PYTHONNOUSERSITE='1'; python scripts/<script_name>.py
 ```
 
 ## Current result (latest)
