@@ -1,12 +1,7 @@
 selected_features
 age
-bicarbonate_min
-bun_max
 bun_min
-creatinine_max
-creatinine_min
 dbp_max
-dbp_mean
 dbp_min
 first_careunit_Cardiac Vascular Intensive Care Unit (CVICU)
 gcs_eyes
@@ -20,15 +15,15 @@ glucose_min
 heart_rate_max
 heart_rate_mean
 heart_rate_min
+heart_rate_range
 insurance_Medicare
 last_careunit_Cardiac Vascular Intensive Care Unit (CVICU)
-marital_status_SINGLE
 mbp_max
 mbp_mean
 mbp_min
 po2_max
 po2_min
-pt_max
+pulse_pressure_mean
 race_UNKNOWN
 resp_rate_max
 resp_rate_mean
@@ -36,10 +31,10 @@ resp_rate_min
 sbp_max
 sbp_mean
 sbp_min
+shock_index_mean
 so2_max
 so2_min
 sofa2_cardiovascular_24h_max
-sofa2_cns_24h_max
 sofa2_coagulation_24h_max
 sofa2_liver_24h_max
 sofa2_renal_24h_max
@@ -49,3 +44,4 @@ spo2_min
 temperature_max
 temperature_mean
 temperature_min
+temperature_range

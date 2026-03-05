@@ -1,5 +1,6 @@
 ﻿from pathlib import Path
 
+import numpy as np
 import pandas as pd
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
@@ -16,6 +17,61 @@ BASE_DIR = Path(__file__).resolve().parents[1]
 RAW_DATA_PATH = BASE_DIR / "data" / "raw" / "Assignment1_mimic_dataset.csv"
 INTERMEDIATE_DIR = BASE_DIR / "data" / "intermediate"
 METRICS_DIR = BASE_DIR / "outputs" / "metrics"
+
+
+def safe_divide(numerator: pd.Series, denominator: pd.Series) -> pd.Series:
+    den = denominator.astype(float).replace(0.0, np.nan)
+    ratio = numerator.astype(float) / den
+    return ratio.replace([np.inf, -np.inf], np.nan)
+
+
+def add_course_aligned_features(df: pd.DataFrame) -> pd.DataFrame:
+    featured = df.copy()
+
+    if {"heart_rate_mean", "sbp_mean"}.issubset(featured.columns):
+        featured["shock_index_mean"] = safe_divide(
+            featured["heart_rate_mean"], featured["sbp_mean"]
+        )
+    if {"sbp_mean", "dbp_mean"}.issubset(featured.columns):
+        featured["pulse_pressure_mean"] = (
+            featured["sbp_mean"] - featured["dbp_mean"]
+        ).astype(float)
+    if {"bun_max", "creatinine_max"}.issubset(featured.columns):
+        featured["bun_creatinine_ratio"] = safe_divide(
+            featured["bun_max"], featured["creatinine_max"]
+        )
+    if {"abs_neutrophils_max", "abs_lymphocytes_max"}.issubset(featured.columns):
+        featured["neutrophil_lymphocyte_ratio"] = safe_divide(
+            featured["abs_neutrophils_max"], featured["abs_lymphocytes_max"]
+        )
+    if {"heart_rate_max", "heart_rate_min"}.issubset(featured.columns):
+        featured["heart_rate_range"] = (
+            featured["heart_rate_max"] - featured["heart_rate_min"]
+        ).astype(float)
+    if {"sbp_max", "sbp_min"}.issubset(featured.columns):
+        featured["sbp_range"] = (featured["sbp_max"] - featured["sbp_min"]).astype(float)
+    if {"temperature_max", "temperature_min"}.issubset(featured.columns):
+        featured["temperature_range"] = (
+            featured["temperature_max"] - featured["temperature_min"]
+        ).astype(float)
+    if {"glucose_max", "glucose_min"}.issubset(featured.columns):
+        featured["glucose_range"] = (
+            featured["glucose_max"] - featured["glucose_min"]
+        ).astype(float)
+
+    sofa_cols = [
+        "sofa2_respiration_24h_max",
+        "sofa2_cardiovascular_24h_max",
+        "sofa2_coagulation_24h_max",
+        "sofa2_liver_24h_max",
+        "sofa2_renal_24h_max",
+        "sofa2_cns_24h_max",
+    ]
+    available_sofa_cols = [col for col in sofa_cols if col in featured.columns]
+    if available_sofa_cols:
+        featured["sofa2_total_24h_max"] = featured[available_sofa_cols].sum(axis=1)
+
+    return featured
 
 
 def main() -> None:
@@ -51,6 +107,9 @@ def main() -> None:
         random_state=RANDOM_STATE,
         stratify=y,
     )
+
+    X_train_raw = add_course_aligned_features(X_train_raw)
+    X_test_raw = add_course_aligned_features(X_test_raw)
 
     categorical_cols = X_train_raw.select_dtypes(include=["object"]).columns.tolist()
     numerical_cols = X_train_raw.select_dtypes(include=["int64", "float64"]).columns.tolist()

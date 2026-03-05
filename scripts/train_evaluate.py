@@ -14,7 +14,7 @@ from sklearn.metrics import (
     roc_auc_score,
     roc_curve,
 )
-from sklearn.neural_network import MLPClassifier
+from sklearn.svm import SVC
 
 
 RANDOM_STATE = 42
@@ -58,10 +58,14 @@ def main() -> None:
             n_jobs=1,
             class_weight="balanced_subsample",
         ),
-        "Multi-Layer Perceptron": MLPClassifier(
-            hidden_layer_sizes=(100,),
-            max_iter=500,
+        "Support Vector Machine (RBF)": SVC(
+            kernel="rbf",
+            C=1.0,
+            gamma="scale",
+            class_weight="balanced",
+            probability=True,
             random_state=RANDOM_STATE,
+            cache_size=512,
         ),
     }
 

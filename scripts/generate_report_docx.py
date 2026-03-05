@@ -1,8 +1,13 @@
 ﻿from __future__ import annotations
 
 import csv
+import sys
 from datetime import datetime
 from pathlib import Path
+
+LOCAL_PYDEPS = Path(__file__).resolve().parents[1] / ".tools" / "pydeps"
+if LOCAL_PYDEPS.exists():
+    sys.path.insert(0, str(LOCAL_PYDEPS))
 
 from docx import Document
 from docx.shared import Inches
@@ -77,11 +82,13 @@ def main() -> None:
 
     doc.add_heading("3. Leakage-Free Pipeline", level=1)
     doc.add_paragraph(
-        "Pipeline update applied based on review: all preprocessors and feature selectors are fitted on training data only, then applied to the test set."
+        "All preprocessors and feature selectors are fitted on training data only, then applied to the test set to avoid information leakage."
     )
     doc.add_paragraph(
-        "Steps: (1) drop identifiers/timestamps and known leakage columns, (2) median/mode imputation, one-hot encoding, scaling, "
-        "(3) variance threshold, (4) L1 logistic selection + random forest importance ensemble, (5) model training and hold-out evaluation."
+        "Course-aligned feature engineering adds interpretable derived variables before model fitting, including shock index, pulse pressure, BUN/creatinine ratio, neutrophil/lymphocyte ratio, and several physiologic range features."
+    )
+    doc.add_paragraph(
+        "Steps: (1) drop identifiers/timestamps and known leakage columns, (2) generate derived clinical features, (3) median/mode imputation, one-hot encoding, scaling, (4) variance threshold, (5) L1 logistic selection + random forest importance ensemble, (6) LR/RF/SVM model training and hold-out evaluation."
     )
 
     doc.add_heading("4. Feature Selection Results", level=1)
@@ -127,7 +134,7 @@ def main() -> None:
         f"Best Recall model: {best_recall_row['Model']} (Recall={num(best_recall_row['Recall'])})."
     )
     doc.add_paragraph(
-        "Interpretation: Random Forest gives the strongest ranking performance (AUC/PR-AUC), while Logistic Regression provides the highest sensitivity under current threshold settings."
+        "Interpretation: the three taught models represent different learning biases: Logistic Regression is a regularized linear baseline, Random Forest captures tree-based nonlinear interactions, and SVM provides margin-based nonlinear classification. Final model choice should align with deployment objective (sensitivity, precision, or ranking quality)."
     )
 
     doc.add_heading("6. Figures", level=1)
@@ -143,8 +150,7 @@ def main() -> None:
 
     doc.add_heading("7. Conclusion", level=1)
     doc.add_paragraph(
-        "The project has been updated to a leakage-free experimental setup with reproducible outputs and cleaner project structure. "
-        "Current results are consistent with an imbalanced clinical prediction task and suitable for assignment reporting."
+        "The project now follows the course progression with leakage-aware preprocessing, course-aligned feature engineering, and direct comparison across Logistic Regression, Random Forest, and SVM. Results are reproducible and suitable for assignment reporting."
     )
 
     doc.save(REPORT_PATH)
