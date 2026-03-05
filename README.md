@@ -14,8 +14,8 @@ I use 3 models:
 
 ## How to run
 Run "preprocess.py","feature_selection.py","train_evaluate.py":
-```powershell
-$env:PYTHONNOUSERSITE='1'; python scripts/<script_name>.py
+```
+python scripts/<script_name>.py
 ```
 
 ## Current result (latest)
