@@ -33,5 +33,5 @@ reports/~$*.docx
 reports/
 
 # generating reports
-scripts\generate_full_report_docx.py
-scripts\run_pipeline.py
+scripts/generate_full_report_docx.py
+scripts/run_pipeline.py
