@@ -13,14 +13,9 @@ I use 3 models:
 - `outputs/figures/`: plots (ROC curve and feature importance)
 
 ## How to run
-1. Run full pipeline:
+Run full pipeline:
 ```powershell
 $env:PYTHONNOUSERSITE='1'; python scripts/run_pipeline.py
-```
-2. (Optional) Generate report docx:
-```powershell
-python scripts/generate_report_docx.py
-python scripts/generate_full_report_docx.py
 ```
 
 ## Current result (latest)
