@@ -1,0 +1,32 @@
+﻿# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environments
+.venv/
+venv/
+.env
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Data and large generated artifacts
+data/raw/*.csv
+data/intermediate/
+archive/
+outputs/figures/
+
+# Optional logs
+*.log
+docs/
+
+# Local helper dependencies
+.tools/pydeps/
+
+# Temporary Office lock files
+reports/~$*.docx
